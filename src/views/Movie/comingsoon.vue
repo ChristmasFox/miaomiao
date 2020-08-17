@@ -4,8 +4,8 @@
     <div v-else>
       <ul>
       <li v-for="data in datalist" :key="data.filmId">
-        <img :src="data.poster" alt="">
-        <div class="text">
+        <img :src="data.poster" alt="" @click="handleToDetail(data.filmId)">
+        <div class="text" @click="handleToDetail(data.filmId)">
           <h3>{{data.name}}</h3>
           <p>观众评<b>{{data.grade}}</b></p>
           <p>主演:{{ data.actors | actorfilter}}</p>
@@ -49,6 +49,11 @@ export default {
       this.prevcityId = nowCityId
       this.isLoading = false
     })
+  },
+  methods: {
+    handleToDetail(id) {
+      this.$router.push(`/detail/${id}`)
+    }
   },
 }
 </script>
