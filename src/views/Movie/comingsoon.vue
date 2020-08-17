@@ -1,6 +1,8 @@
 <template>
   <div class="nowout">
-    <ul>
+    <Loading v-if="isLoading"></Loading>
+    <div v-else>
+      <ul>
       <li v-for="data in datalist" :key="data.filmId">
         <img :src="data.poster" alt="">
         <div class="text">
@@ -12,6 +14,7 @@
         <div class="bought">预售</div>
       </li>
     </ul>
+    </div>
   </div>
 </template>
 <script>
@@ -25,14 +28,17 @@ export default {
   data() {
     return {
       datalist: [],
-      cityid: ''
+      isLoading: true,
+      prevcityId: -1
     }
   },
-  mounted() {
-    this.cityid = localStorage.getItem('id')
-    console.log(this.cityid)
+  activated() {
+    var nowCityId = this.$store.state.cityId
+    if( this.prevcityId === nowCityId){return}
+    this.isLoading = true
+
     Axios({
-      url: `https://m.maizuo.com/gateway?cityId=${this.cityid}&pageNum=1&pageSize=10&type=2&k=753763`,
+      url: `https://m.maizuo.com/gateway?cityId=${this.$store.state.cityId}&pageNum=1&pageSize=10&type=2&k=753763`,
       headers: {
         'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596954681169569603813377","bc":"210300"}',
         'X-Host': 'mall.film-ticket.film.list'
@@ -40,6 +46,8 @@ export default {
     }).then(res => {
       console.log(res.data.data.films)
       this.datalist = res.data.data.films
+      this.prevcityId = nowCityId
+      this.isLoading = false
     })
   },
 }

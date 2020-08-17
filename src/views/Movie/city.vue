@@ -1,21 +1,24 @@
 <template>
-  <mt-index-list>
-    <div class="hot">
-      <p>热门城市</p>
-      <ul>
-        <li v-for="data in hotlist" :key="data.cityId" @click="handleClick(data.cityId, data.name)">
-          {{ data.name }}
-        </li>
-        <li class="null"></li>
-        <li class="null"></li>
-      </ul>
-    </div>
-    <mt-index-section :index="data.index" v-for="data in datalist" :key="data.index">
-      <div @click="handleClick(city.cityId, city.name)" v-for="city in data.list" :key="city.cityId">
-        <mt-cell :title="city.name"></mt-cell>
+  <div class="cityout">
+    <Loading v-if="isLoading"></Loading>
+    <mt-index-list v-else>
+      <div class="hot">
+        <p>热门城市</p>
+        <ul>
+          <li v-for="data in hotlist" :key="data.cityId" @click="handleClick(data.cityId, data.name)">
+            {{ data.name }}
+          </li>
+          <li class="null"></li>
+          <li class="null"></li>
+        </ul>
       </div>
-    </mt-index-section>
-  </mt-index-list>
+      <mt-index-section :index="data.index" v-for="data in datalist" :key="data.index">
+        <div @click="handleClick(city.cityId, city.name)" v-for="city in data.list" :key="city.cityId">
+          <mt-cell :title="city.name"></mt-cell>
+        </div>
+      </mt-index-section>
+    </mt-index-list>
+  </div>
 </template>
 <script>
 import axios from 'axios'
@@ -23,7 +26,8 @@ export default {
   data() {
     return {
       datalist: [],
-      hotlist: []
+      hotlist: [],
+      isLoading: true
     }
   },
   mounted() {
@@ -34,10 +38,11 @@ export default {
         'X-Host': 'mall.film-ticket.city.list'
       }
     }).then(res => {
-      console.log(res.data.data.cities)
+      // console.log(res.data.data.cities)
       this.datalist = this.handleCity(res.data.data.cities)
       this.hotlist = this.hotCity(res.data.data.cities)
-      console.log(this.hotlist)
+      this.isLoading = false
+      // console.log(this.hotlist)
     })
   },
   methods: {
@@ -68,7 +73,7 @@ export default {
       return newlist
     },
     handleClick(id, name){
-      console.log(id, name)
+      this.$store.commit('city_info', {id, name})
       localStorage.setItem('id', id)
       localStorage.setItem('name', name)
       this.$router.push('/movie')
@@ -78,8 +83,12 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.cityout {
+  overflow: hidden;
+}
 .mint-indexlist {
   touch-action: none;
+  height: 100%;
 }
 .hot {
   padding-bottom: 10px;

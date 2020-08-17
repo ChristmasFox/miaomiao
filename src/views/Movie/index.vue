@@ -4,7 +4,7 @@
     <div id="content">
       <div class="navtop">
         <router-link to="/movie/city" tag="div" class="city" activeClass="active_otr">
-          <span>{{ cityname }}</span>
+          <span>{{ $store.state.cityName }}</span>
           <i class="iconfont icon-xiala2"></i>
         </router-link>
         <div class="movienav">
@@ -31,18 +31,10 @@ import City from '@/views/Movie/city'
 export default {
   data() {
     return {
-      cityname: ""
     }
   },
   mounted() {
-    this.cityname = localStorage.getItem('name')
-  },
-  updated() {
-    console.log(localStorage.getItem('name'))
-    this.cityname = localStorage.getItem('name')
-    if(this.cityname === ''){
-      this.cityname = '鞍山'
-    }
+   
   },
   components: {
     Tabbar,

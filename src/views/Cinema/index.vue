@@ -7,7 +7,8 @@
         <div class="cinema-item">品牌<i class="iconfont icon-xiala2"></i></div>
         <div class="cinema-item">特色<i class="iconfont icon-xiala2"></i></div>
       </div>
-      <div class="cinema-list">
+      <Loading v-if="isLoading"></Loading>
+      <div class="cinema-list" v-else>
         <ul>
           <li v-for="data in datalist" :key="data.cinemaId">
             <div class="addr">
@@ -32,32 +33,25 @@ export default {
   data() {
     return {
       datalist: [],
-      cityid: ''
+      isLoading: true,
+      prevcityId: -1
     }
   },
-  updated() {
-    this.cityid = localStorage.getItem('id')
+  activated() {
+    var nowCityId = this.$store.state.cityId
+    if( this.prevcityId === nowCityId){return}
+    this.isLoading = true
+
     Axios({
-      url: `https://m.maizuo.com/gateway?cityId=${this.cityid}&ticketFlag=1&k=3831249`,
+      url: `https://m.maizuo.com/gateway?cityId=${this.$store.state.cityId}&ticketFlag=1&k=3831249`,
       headers: {
-        'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596954681169569603813377","bc":"210300"}',
+        'X-Client-Info': `{"a":"3000","ch":"1002","v":"5.0.4","e":"1596954681169569603813377","bc":"${this.$store.state.cityId}"}`,
         'X-Host': 'mall.film-ticket.cinema.list'
       }
     }).then(res => {
       this.datalist = res.data.data.cinemas
-      // console.log(this.datalist)
-    })
-  },
-  mounted() {
-    this.cityid = localStorage.getItem('id')
-    Axios({
-      url: `https://m.maizuo.com/gateway?cityId=${this.cityid}&ticketFlag=1&k=3831249`,
-      headers: {
-        'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596954681169569603813377","bc":"210300"}',
-        'X-Host': 'mall.film-ticket.cinema.list'
-      }
-    }).then(res => {
-      this.datalist = res.data.data.cinemas
+      this.prevcityId = nowCityId 
+      this.isLoading = false
       // console.log(this.datalist)
     })
     
