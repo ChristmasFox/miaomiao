@@ -30,13 +30,11 @@ export default {
       datalist: [],
       movielist: [],
       msg: '',
-      cityid: ''
     }
   },
   mounted() {
-    this.cityid = localStorage.getItem('id')
     Axios({
-      url: `https://m.maizuo.com/gateway?cityId=${this.cityid}&pageNum=1&pageSize=10&type=1&k=1650893`,
+      url: `https://m.maizuo.com/gateway?cityId=${this.$store.state.cityId}&pageNum=1&pageSize=10&type=1&k=1650893`,
       headers: {
         'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596954681169569603813377","bc":"210300"}',
         'X-Host': 'mall.film-ticket.film.list'
