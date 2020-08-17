@@ -2,38 +2,65 @@
   <div class="searchout">
     <div class="search">
       <i class="iconfont icon-sousuo1"></i>
-      <input type="text" class="q">
+      <input type="text" class="q" v-model="message">
     </div>
     <div class="res">
       <p class="tit">电影/电视剧/综艺</p>
       <ul>
-        <li>
-          <img src="https://pic.maizuo.com/usr/movie/09348aa4f961d2cb7e8f7c1e5f6e4e90.jpg?x-oss-process=image/quality,Q_70" alt="">
+        <li v-for="data in movielist" :key="data.filmId">
+          <img :src="data.poster" alt="">
           <div class="text">
-            <h3>无名之辈</h3>
-            <p>A Cool Fish</p>
-            <p>剧情,戏剧,犯罪</p>
-            <p>2018-11-16</p>
+            <h3>{{data.name}}</h3>
+            <p>{{data.director}}</p>
+            <p>{{data.category}}</p>
+            <p>{{data.nation}}</p>
           </div>
-          <b>9.2</b>
-        </li>
-        <li>
-          <img src="https://pic.maizuo.com/usr/movie/09348aa4f961d2cb7e8f7c1e5f6e4e90.jpg?x-oss-process=image/quality,Q_70" alt="">
-          <div class="text">
-            <h3>无名之辈</h3>
-            <p>A Cool Fish</p>
-            <p>剧情,戏剧,犯罪</p>
-            <p>2018-11-16</p>
-          </div>
-          <b>9.2</b>
+          <b>{{data.grade}}</b>
         </li>
       </ul>
     </div>
   </div>
 </template>
 <script>
+import Axios from 'axios'
 export default {
-  
+  data() {
+    return {
+      message: '',
+      datalist: [],
+      movielist: [],
+      msg: '',
+      cityid: ''
+    }
+  },
+  mounted() {
+    this.cityid = localStorage.getItem('id')
+    Axios({
+      url: `https://m.maizuo.com/gateway?cityId=${this.cityid}&pageNum=1&pageSize=10&type=1&k=1650893`,
+      headers: {
+        'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596954681169569603813377","bc":"210300"}',
+        'X-Host': 'mall.film-ticket.film.list'
+      }
+    }).then(res => {
+      this.msg = res.data.msg
+      this.datalist = res.data.data.films
+    })
+  },
+  watch: {
+    message(newval){
+      if(newval != '') {
+        var itemlist = []
+        this.datalist.forEach(item => {
+          if(item.name.search(newval) != -1){
+            itemlist.push(item)
+          }
+        });
+        this.movielist = itemlist
+      }else {
+        this.movielist = ''
+      }
+    }
+  },
 }
 </script>
 <style lang="scss" scoped>

@@ -9,52 +9,15 @@
       </div>
       <div class="cinema-list">
         <ul>
-          <li>
+          <li v-for="data in datalist" :key="data.cinemaId">
             <div class="addr">
-              <b>大地影院(奥东世纪店)</b>
-              <p>金州区大连经济技术开发区澳东世纪3层</p>
+              <b>{{data.name}}</b>
+              <p>{{data.address}}</p>
               <span class="tag">小吃</span><span class="tag">折扣卡</span>
-              <span class="price"><span>22.9</span>元起</span>
+              <span class="price"><span>{{data.lowPrice/100}}</span>元起</span>
             </div>
-            <div class="distence">1763.5km</div>
+            <div class="distence">{{data.Distance.toFixed(2)}}km</div>
           </li>
-          <li>
-            <div class="addr">
-              <b>大地影院(奥东世纪店)</b>
-              <p>金州区大连经济技术开发区澳东世纪3层</p>
-              <span class="tag">小吃</span><span class="tag">折扣卡</span>
-              <span class="price"><span>22.9</span>元起</span>
-            </div>
-            <div class="distence">1763.5km</div>
-          </li>
-          <li>
-            <div class="addr">
-              <b>大地影院(奥东世纪店)</b>
-              <p>金州区大连经济技术开发区澳东世纪3层</p>
-              <span class="tag">小吃</span><span class="tag">折扣卡</span>
-              <span class="price"><span>22.9</span>元起</span>
-            </div>
-            <div class="distence">1763.5km</div>
-          </li>
-          <li>
-            <div class="addr">
-              <b>大地影院(奥东世纪店)</b>
-              <p>金州区大连经济技术开发区澳东世纪3层</p>
-              <span class="tag">小吃</span><span class="tag">折扣卡</span>
-              <span class="price"><span>22.9</span>元起</span>
-            </div>
-            <div class="distence">1763.5km</div>
-          </li>
-          <li>
-            <div class="addr">
-              <b>大地影院(奥东世纪店)</b>
-              <p>金州区大连经济技术开发区澳东世纪3层</p>
-              <span class="tag">小吃</span><span class="tag">折扣卡</span>
-              <span class="price"><span>22.9</span>元起</span>
-            </div>
-            <div class="distence">1763.5km</div>
-          </li>
-          
         </ul>
       </div>
     </div>
@@ -64,7 +27,41 @@
 <script>
 import Tabbar from '@/components/Tabbar'
 import Header from '@/components/Header'
+import Axios from 'axios'
 export default {
+  data() {
+    return {
+      datalist: [],
+      cityid: ''
+    }
+  },
+  updated() {
+    this.cityid = localStorage.getItem('id')
+    Axios({
+      url: `https://m.maizuo.com/gateway?cityId=${this.cityid}&ticketFlag=1&k=3831249`,
+      headers: {
+        'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596954681169569603813377","bc":"210300"}',
+        'X-Host': 'mall.film-ticket.cinema.list'
+      }
+    }).then(res => {
+      this.datalist = res.data.data.cinemas
+      // console.log(this.datalist)
+    })
+  },
+  mounted() {
+    this.cityid = localStorage.getItem('id')
+    Axios({
+      url: `https://m.maizuo.com/gateway?cityId=${this.cityid}&ticketFlag=1&k=3831249`,
+      headers: {
+        'X-Client-Info': '{"a":"3000","ch":"1002","v":"5.0.4","e":"1596954681169569603813377","bc":"210300"}',
+        'X-Host': 'mall.film-ticket.cinema.list'
+      }
+    }).then(res => {
+      this.datalist = res.data.data.cinemas
+      // console.log(this.datalist)
+    })
+    
+  },
   components: {
     Tabbar,
     Header
@@ -115,7 +112,7 @@ export default {
         .price {
           position: absolute;
           right: 5px;
-          top: 0;
+          bottom: 0;
           font-size: 13px;
           color: red;
           span {
