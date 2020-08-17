@@ -3,19 +3,11 @@
     <div class="hot">
       <p>热门城市</p>
       <ul>
-        <li>北京</li>
-        <li>上海</li>
-        <li>广州</li>
-      </ul>
-      <ul>
-        <li>深圳</li>
-        <li>南京</li>
-        <li>西安</li>
-      </ul>
-      <ul>
-        <li>合肥</li>
-        <li>湖南</li>
-        <li>湖南</li>
+        <li v-for="data in hotlist" :key="data.cityId" @click="handleClick(data.cityId, data.name)">
+          {{ data.name }}
+        </li>
+        <li class="null"></li>
+        <li class="null"></li>
       </ul>
     </div>
     <mt-index-section :index="data.index" v-for="data in datalist" :key="data.index">
@@ -30,7 +22,8 @@ import axios from 'axios'
 export default {
   data() {
     return {
-      datalist: []
+      datalist: [],
+      hotlist: []
     }
   },
   mounted() {
@@ -41,7 +34,10 @@ export default {
         'X-Host': 'mall.film-ticket.city.list'
       }
     }).then(res => {
+      console.log(res.data.data.cities)
       this.datalist = this.handleCity(res.data.data.cities)
+      this.hotlist = this.hotCity(res.data.data.cities)
+      console.log(this.hotlist)
     })
   },
   methods: {
@@ -61,11 +57,24 @@ export default {
         }
       }
       return newlist
+    },  
+    hotCity(datalist){
+      var newlist = []
+      for(var i=0; i<datalist.length; i++){
+        if(datalist[i].isHot === 1){
+          newlist.push(datalist[i])
+        }
+      }
+      return newlist
+    },
+    handleClick(id, name){
+      console.log(id, name)
+      localStorage.setItem('id', id)
+      localStorage.setItem('name', name)
+      this.$router.push('/movie')
     }
   },
-  handleClick(id, name){
-
-  }
+  
 }
 </script>
 <style lang="scss" scoped>
@@ -81,16 +90,23 @@ export default {
   background-color: rgba(224, 224, 224, 0.562);
   ul {
     display: flex;
-    justify-content: space-evenly;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
     padding: 10px 0;
     li {
+      margin-bottom: 10px;
+      flex-shrink: 0;
       background-color: white;
-      width: 30%;
+      width: 80px;
       height: 30px;
       line-height: 30px;
       text-align: center;;
       border-radius: 5px;
     }
+    .null {
+        height: 0;
+      }
   }
 }
 </style>
