@@ -5,8 +5,8 @@
       <ul>
         <li class="pulldown">{{ pullDownMsg }}</li>
         <li v-for="data in datalist" :key="data.filmId">
-          <img :src="data.poster" alt="" @tap="handleToDetail">
-          <div class="text" @tap="handleToDetail">
+          <img :src="data.poster" alt="" @tap="handleToDetail(data.filmId)">
+          <div class="text" @tap="handleToDetail(data.filmId)">
             <h3>{{data.name}}</h3>
             <p>观众评<b>{{data.grade}}</b></p>
             <p>主演:{{ data.actors | actorfilter}}</p>
@@ -60,12 +60,12 @@ export default {
           probeType: 1
         })
         scroll.on('scroll', (pos) => {
-          if(pos.y > 15){
+          if(pos.y > 30){
             this.pullDownMsg = '更新中'
           }
         })
         scroll.on('touchEnd', (pos)=> {
-          if(pos.y > 15){
+          if(pos.y > 30){
             Axios({
               url: `https://m.maizuo.com/gateway?cityId=${this.cityid}&pageNum=1&pageSize=10&type=1&k=1650893`,
               headers: {
@@ -85,8 +85,8 @@ export default {
     })
   },
   methods: {
-    handleToDetail() {
-      console.log('handletodetail')
+    handleToDetail(id) {
+      this.$router.push(`/detail/${id}`)
     }
   },
 }
