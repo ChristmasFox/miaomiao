@@ -66,7 +66,7 @@ export default {
             var cityId = this.datalist[i].cityId
           }
         }
-        if( this.$store.state.cityName === cityName){return}
+        if( this.$store.state.cityName === cityName ){return}
         messageBox({
          title: '定位',
          content: cityName,
@@ -83,7 +83,7 @@ export default {
          }
         })
       })
-    },2000)
+    },3000)
 // https://restapi.amap.com/v3/ip?ip=114.247.50.2&output=xml&key=e573dc1792435fe0975dc1e484af680c
   },
   components: {

@@ -6,8 +6,10 @@ import store from './stores'
 import Mint from 'mint-ui';
 import 'mint-ui/lib/style.css'
 import Loading from '@/components/Loading'
+import GoogleLoading from '@/components/GoogleLoading'
 Vue.use(Mint);
 Vue.component('Loading', Loading)
+Vue.component('GoogleLoading', GoogleLoading)
 
 Vue.config.productionTip = false
 

@@ -12,7 +12,7 @@ export default new Vuex.Store({
     city_info(state, data){
       state.cityId = data.id
       state.cityName = data.name
-    }
+    },
   },
   actions: {
   },

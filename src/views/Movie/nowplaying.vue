@@ -60,12 +60,12 @@ export default {
           probeType: 1
         })
         scroll.on('scroll', (pos) => {
-          if(pos.y > 15){
+          if(pos.y > 30){
             this.pullDownMsg = '更新中'
           }
         })
         scroll.on('touchEnd', (pos)=> {
-          if(pos.y > 15){
+          if(pos.y > 30){
             Axios({
               url: `https://m.maizuo.com/gateway?cityId=${this.cityid}&pageNum=1&pageSize=10&type=1&k=1650893`,
               headers: {
